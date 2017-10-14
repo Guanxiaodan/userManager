@@ -31,7 +31,8 @@
 <template>
     <div class="flex-c center container-all">
       <div>
-        <div class="container-border flex-c m-around ">
+        <!--登录页面-->
+        <div v-if="isSignIn" class="container-border flex-c m-around ">
           <div>
             <h2 class="rice-yellow">请输入用户名：</h2>
             <Input class="to-top" v-model="name" placeholder="请输入用户名..." style="width: 300px"></Input>
@@ -40,12 +41,30 @@
             <h2 class="rice-yellow">请输入密码：</h2>
             <Input class="to-top" v-model="password" placeholder="请输入密码..." type="password" style="width: 300px"></Input>
           </div>
-          <div class="green pointer">
+          <div class="green pointer" @click="signUp">
             <span>还没有账号?</span>
             <span>点击注册>></span>
           </div>
           <div>
             <Button type="primary" @click="login">登 录</Button>
+          </div>
+        </div>
+        <!--注册页面-->
+        <div v-if="!isSignIn" class="container-border flex-c m-around ">
+          <div>
+            <h2 class="rice-yellow">请输入用户名：</h2>
+            <Input class="to-top" v-model="name" placeholder="请输入用户名..." style="width: 300px"></Input>
+          </div>
+          <div>
+            <h2 class="rice-yellow">请输入密码：</h2>
+            <Input class="to-top" v-model="password" placeholder="请输入密码..." type="password" style="width: 300px"></Input>
+          </div>
+          <div>
+            <h2 class="rice-yellow">请再次输入密码：</h2>
+            <Input class="to-top" v-model="password" placeholder="请输入密码..." type="password" style="width: 300px"></Input>
+          </div>
+          <div>
+            <Button type="primary" @click="login">注 册</Button>
           </div>
         </div>
       </div>
@@ -60,12 +79,20 @@
     data () {
       return {
         name: '',
-        password: ''
+        password: '',
+        passwordTwo: '', // 再次输入密码
+        isSignIn: true // 是否是登录页面，否则就是注册页面
       }
     },
     methods: {
+        // 点击登录按钮
       login () {
+        this.isSignIn = false
         debug('点击了登录按妞')
+      },
+      // 点击注册
+      signUp () {
+        this.isSignIn = false
       }
     }
   }

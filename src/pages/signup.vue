@@ -41,7 +41,7 @@
             <h2 class="rice-yellow">请输入密码：</h2>
             <Input class="to-top" v-model="password" placeholder="请输入密码..." type="password" style="width: 300px"></Input>
           </div>
-          <div class="green pointer" @click="signUp">
+          <div class="green pointer" @click="isSignIn = false">
             <span>还没有账号?</span>
             <span>点击注册>></span>
           </div>
@@ -61,10 +61,10 @@
           </div>
           <div>
             <h2 class="rice-yellow">请再次输入密码：</h2>
-            <Input class="to-top" v-model="password" placeholder="请输入密码..." type="password" style="width: 300px"></Input>
+            <Input class="to-top" v-model="passwordTwo" placeholder="请输入密码..." type="password" style="width: 300px"></Input>
           </div>
           <div>
-            <Button type="primary" @click="login">注 册</Button>
+            <Button type="primary" @click="signUp">注 册</Button>
           </div>
         </div>
       </div>
@@ -74,6 +74,7 @@
 <script>
   const debug = require('debug')('login')
 //  const _ = require('lodash');
+  const http = require('../api/httpApi')
 
   export default {
     data () {
@@ -81,7 +82,7 @@
         name: '',
         password: '',
         passwordTwo: '', // 再次输入密码
-        isSignIn: true // 是否是登录页面，否则就是注册页面
+        isSignIn: true // true:登录页面，false:注册页面
       }
     },
     methods: {
@@ -92,7 +93,15 @@
       },
       // 点击注册
       signUp () {
-        this.isSignIn = false
+        http.post('/singup', {
+          name: this.name,
+          pwd: this.password
+        }).then((res) => {
+          debug('注册成功', res)
+        }).catch((err) => {
+          debug('注册失败', err)
+        })
+//        this.isSignIn = false
       }
     }
   }

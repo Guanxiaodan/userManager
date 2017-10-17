@@ -11,6 +11,6 @@ const http = axios.create({
 
 module.exports = {
   post (url, data) {
-    http.post(url, data)
+    return http.post(url, data)
   }
 }

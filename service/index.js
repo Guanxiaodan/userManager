@@ -25,6 +25,19 @@ app.use('/', (req, res, next) => {
 app.listen(9983, () => {})
 app.use(bodyParser.json())
 
+// // 使用mongoose数据库
+// var mongoose = require('mongoose')
+// mongoose.connect('mongodb://localhost/userManager') // 将userManager数据库挂载到localhost上运行
+//
+// // 现在需要检验数据库是否连接成功
+// var db = mongoose.connection();
+// db.on('error', () => {
+//   debug('数据库打开失败')
+// })
+// db.once('open', () => {
+//   debug('数据库打开成功')
+// })
+
 app.post('/singup', (req, res) => {
   debug('这个是过来的请求数据', req.body)
   res.status(200).json(req.body)

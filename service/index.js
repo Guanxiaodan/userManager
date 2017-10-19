@@ -6,6 +6,7 @@ var express = require('express')
 var app = express()
 const debug = require('debug')('index')
 const bodyParser = require('body-parser')
+// const session = require('express-session')
 
 /**
  *   解决跨域问题

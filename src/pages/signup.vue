@@ -64,7 +64,8 @@
             <Input class="to-top" v-model="passwordTwo" placeholder="请输入密码..." type="password" style="width: 300px"></Input>
           </div>
           <div>
-            <Button type="primary" @click="signUp">注 册</Button>
+            <Button type="primary" @click="cancel">取 消</Button>
+            <Button type="primary" @click="signUp" class="to-left-large">注 册</Button>
           </div>
         </div>
       </div>
@@ -73,7 +74,7 @@
 
 <script>
   const debug = require('debug')('login')
-//  const _ = require('lodash');
+  const _ = require('lodash')
   const http = require('../api/httpApi')
 
   export default {
@@ -88,20 +89,88 @@
     methods: {
         // 点击登录按钮
       login () {
-        this.isSignIn = false
         debug('点击了登录按妞')
+        // 判断数据合法性
+        if (_.isEmpty(this.name) || _.isEmpty(this.password)) {
+          this.$Notice.warning({
+            title: '名称或密码不能为空'
+          })
+          return
+        }
+        // 登录
+        http.post('/signIn', {
+          name: this.name,
+          pwd: this.password
+        })
+          .then((res) => {
+            debug('登陆成功', res)
+            if (res.data === '密码错误') {
+              this.$Notice.error({
+                title: '密码错误!'
+              })
+              this.password = ''
+              return
+            }
+            if (res.data === 'NOT FIND') {
+              this.$Notice.error({
+                title: '该用户未注册!'
+              })
+              this.name = ''
+              this.password = ''
+              return
+            }
+            this.$Notice.success({
+              title: '登陆成功!'
+            })
+            window.location.hash = '/modify'
+          }).catch((err) => {
+            debug('登录失败', err)
+            this.$Notice.error({
+              title: '登录失败!'
+            })
+          })
       },
       // 点击注册
       signUp () {
-        http.post('/singup', {
+          // 判断数据合法性
+        if (_.isEmpty(this.name) || _.isEmpty(this.password) || _.isEmpty(this.passwordTwo)) {
+          this.$Notice.warning({
+            title: '名称或密码不能为空'
+          })
+          return
+        }
+        // 判断两次输入的密码是否相同
+        if (this.password !== this.passwordTwo) {
+          this.$Notice.warning({
+            title: '两次输入的密码不一致，请重新输入！'
+          })
+          this.password = ''
+          this.passwordTwo = ''
+          return
+        }
+        // 保存数据库
+        http.post('/signup', {
           name: this.name,
           pwd: this.password
         }).then((res) => {
+          this.$Notice.success({
+            title: '注册成功, 请登录！'
+          })
+          this.cancel()
           debug('注册成功', res)
         }).catch((err) => {
+          this.$Notice.error({
+            title: '注册失败！'
+          })
           debug('注册失败', err)
         })
-//        this.isSignIn = false
+      },
+      // 取消注册
+      cancel () {
+        this.name = ''
+        this.password = ''
+        this.passwordTwo = ''
+        this.isSignIn = true
       }
     }
   }

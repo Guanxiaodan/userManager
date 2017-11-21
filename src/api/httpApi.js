@@ -5,8 +5,8 @@
 const axios = require('axios')
 
 const http = axios.create({
-  baseURL: 'http://192.168.31.117:9983',
-  timeout: 1000
+  baseURL: 'http://localhost:9983',
+  timeout: 2000
 })
 
 module.exports = {

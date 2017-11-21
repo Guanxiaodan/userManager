@@ -32,7 +32,7 @@
     <div class="flex-c center container-all">
       <div>
         <!--登录页面-->
-        <div v-if="isSignIn" class="container-border flex-c m-around ">
+        <div v-if="isSignIn" class="container-border flex-c m-around animated flipInX">
           <div>
             <h2 class="rice-yellow">请输入用户名：</h2>
             <Input class="to-top" v-model="name" placeholder="请输入用户名..." style="width: 300px"></Input>
@@ -50,7 +50,7 @@
           </div>
         </div>
         <!--注册页面-->
-        <div v-if="!isSignIn" class="container-border flex-c m-around ">
+        <div v-if="!isSignIn" class="container-border flex-c m-around animated flipInYR">
           <div>
             <h2 class="rice-yellow">请输入用户名：</h2>
             <Input class="to-top" v-model="name" placeholder="请输入用户名..." style="width: 300px"></Input>

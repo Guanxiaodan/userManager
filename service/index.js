@@ -45,12 +45,11 @@ mongoose.connect('mongodb://localhost/userManager') // 将userManager数据库�
  */
 app.use(session({
   secret: 'keyboard cat',
-  store: new MongoStore({
-    host: 'localhost',
-    port: 27017,
-    // dbPromise: 'userManager'
-    db: mongoose.connection.db
-  }),
+  // store: new MongoStore({
+  //   host: 'localhost',
+  //   port: 27017,
+  //   db: mongoose.connection.db
+  // }),
   cookie: {
     maxAge: 1000 * 60 * 5
   }

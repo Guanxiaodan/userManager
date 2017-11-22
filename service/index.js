@@ -13,7 +13,7 @@ const MongoStore = require('connect-mongo')(session)
 /**
  *   解决跨域问题
  */
-app.use('/', (req, res, next) => {
+app.all('*', (req, res, next) => {
   debug('HTTP REQ:', req.method, req.url, req.headers.origin)
   // TODO: 设置跨域的黑白名单
   res.set('Access-Control-Allow-Method', req.method)
@@ -34,7 +34,6 @@ app.listen(9983, () => {})
 app.use(bodyParser.json())
 
 
-
 /**
  * 使用mongoose数据库
  */
@@ -49,23 +48,9 @@ app.use(session({
     url: 'mongodb://localhost/userManager'
   }),
   cookie: {
-    maxAge: 1000 * 60 * 60 * 24
+    maxAge: 1000 * 60 * 60
   }
 }))
-
-app.get('/', (req, res, next) => { // 接入session数据
-  debug('进来了吗，这里是session')
-  var sess = req.session
-  if (sess.views) {
-    sess.views++
-    res.setHeader('Content-Type', 'text/html')
-    res.write(`这是您第${sess.views}次登陆，距离过期时间还有${sess.cookie.maxAge / 1000}秒`)
-    res.end()
-  } else {
-    sess.views = 1
-    res.end('欢迎来到session存储')
-  }
-})
 
 // 现在需要检验数据库是否连接成功
 var db = mongoose.connection
@@ -102,7 +87,7 @@ db.once('open', () => {
   /**
    * 登录
    */
-  app.post('/signIn2', (req, res) => {
+  app.post('/signIn', (req, res) => {
     debug('这个是登录时浏览器发送过来的数据', req.body)
     User.findOne({name: req.body.name}, (err, persion) => {
       if (err) {
@@ -120,13 +105,9 @@ db.once('open', () => {
           debug('什么情况？？？')
           req.session.userInfo = {}
           req.session.userInfo.name = req.body.name
-          res.status(200).send('登录成功')
+          res.status(200).json({ status: '登录成功', name: req.body.name })
         }
       }
     })
-  })
-  app.post('/signIn', (req, res) => {
-    debug('这个是登录时浏览器发送过来的数据', req.body)
-    res.status(200).send('登录成功')
   })
 })

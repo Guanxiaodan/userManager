@@ -4,7 +4,7 @@
  */
 var express = require('express')
 var app = express()
-// var mongoose = require('mongoose')
+var mongoose = require('mongoose')
 const debug = require('debug')('index')
 const bodyParser = require('body-parser')
 const session = require('express-session')
@@ -45,13 +45,67 @@ app.use(session({
     maxAge: 1000 * 60 * 60
   }
 }))
+
 /**
- * 登录
+ * 使用mongoose数据库
  */
-app.post('/signIn', (req, res) => {
-  debug('这是前端传过来的数据', req.body)
-  // req.session.name = req.body.name
-  debug('这个是session', req.session)
-  debug('这个是sessionID', req.sessionID)
-  res.status(200).end()
+mongoose.connect('mongodb://localhost/userManager') // 将userManager数据库挂载到localhost上运行,如果没有该数据库就创建
+// 现在需要检验数据库是否连接成功
+var db = mongoose.connection
+db.on('error', (err) => {
+  debug('数据库打开失败', err)
+})
+db.once('open', () => {
+  debug('数据库打开成功')
+  // 创建一个schema，它是用来定义数据表结构的，只有schema里定义的字段才能被保存到数据库
+  var userSchema = mongoose.Schema({
+    name: String,
+    pwd: String
+  })
+  // 创建模型User，他可以操作数据库中的数据表
+  // userInfo其实是数据表（同时被创建出来）
+  var User = mongoose.model('userInfo', userSchema)
+  /**
+   * 注册
+   */
+  app.post('/signup', (req, res) => {
+    debug('这个是过来的请求数据', req.body)
+    // 模型是创建文档的类，在这个例子中,一个silence就是一个文档(文档就是数据表中的一条一条的项)
+    var silence = new User(req.body)
+    silence.save((err, doc) => {
+      if (err) {
+        debug('保存数据库失败', err)
+        res.status(500).json(req.body)
+      } else {
+        debug('保存数据库成功', doc)
+        res.status(200).send('注册成功')
+      }
+    })
+  })
+  /**
+   * 登录
+   */
+  app.post('/signIn', (req, res) => {
+    debug('这个是登录时浏览器发送过来的数据', req.body)
+    User.findOne({name: req.body.name}, (err, persion) => {
+      if (err) {
+        debug('数据库查询用户失败', err)
+        res.status(500).send('未知错误')
+      } else {
+        debug('看登录查询数据库的结果是啥', persion)
+        if (!persion) {
+          res.status(200).send('NOT FIND')
+          return
+        }
+        if (persion.pwd !== req.body.pwd) {
+          res.status(200).send('密码错误')
+        } else {
+          debug('什么情况？？？')
+          req.session.userInfo = {}
+          req.session.userInfo.name = req.body.name
+          res.status(200).json({ status: '登录成功', name: req.body.name })
+        }
+      }
+    })
+  })
 })

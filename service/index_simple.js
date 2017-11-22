@@ -8,7 +8,7 @@ var app = express()
 const debug = require('debug')('index')
 const bodyParser = require('body-parser')
 const session = require('express-session')
-const MongoStore = require('connect-mongo')(session)
+// const MongoStore = require('connect-mongo')(session)
 
 /**
  *   解决跨域问题
@@ -38,9 +38,6 @@ app.use(bodyParser.json())
  */
 app.use(session({
   secret: 'userManager',
-  store: new MongoStore({
-    url: 'mongodb://localhost/userManager'
-  }),
   cookie: {
     maxAge: 1000 * 60 * 60
   }

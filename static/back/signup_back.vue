@@ -3,7 +3,7 @@
   .container-all {
     width: 100%;
     height: 100%;
-    background: url("../../static/city.jpg") no-repeat;
+    background: url("../city.jpg") no-repeat;
     /*background: url("https://whvn.cc/338001") no-repeat;*/
     background-size: cover;
   }
@@ -75,7 +75,7 @@
 <script>
   const debug = require('debug')('login')
   const _ = require('lodash')
-  const http = require('../api/httpApi')
+  const http = require('../../src/api/httpApi')
 
   export default {
     data () {

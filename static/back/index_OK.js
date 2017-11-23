@@ -9,7 +9,6 @@ const debug = require('debug')('index')
 const bodyParser = require('body-parser')
 const session = require('express-session')
 const MongoStore = require('connect-mongo')(session)
-const md5 = require('md5')
 
 /**
  *   解决跨域问题
@@ -35,15 +34,10 @@ app.listen(9983, () => {})
 app.use(bodyParser.json())
 
 /**
- * 使用mongoose数据库
- */
-mongoose.connect('mongodb://localhost/userManager') // 将userManager数据库挂载到localhost上运行,如果没有该数据库就创建
-
-/**
  * 使用session
  */
 app.use(session({
-  secret: 'keyboard cat',
+  secret: 'userManager',
   store: new MongoStore({
     url: 'mongodb://localhost/userManager'
   }),
@@ -52,6 +46,10 @@ app.use(session({
   }
 }))
 
+/**
+ * 使用mongoose数据库
+ */
+mongoose.connect('mongodb://localhost/userManager') // 将userManager数据库挂载到localhost上运行,如果没有该数据库就创建
 // 现在需要检验数据库是否连接成功
 var db = mongoose.connection
 db.on('error', (err) => {
@@ -61,7 +59,6 @@ db.once('open', () => {
   debug('数据库打开成功')
   // 创建一个schema，它是用来定义数据表结构的，只有schema里定义的字段才能被保存到数据库
   var userSchema = mongoose.Schema({
-    id: String,
     name: String,
     pwd: String
   })
@@ -72,14 +69,9 @@ db.once('open', () => {
    * 注册
    */
   app.post('/signup', (req, res) => {
-    const data = `${new Date().getTime()}${req.body.name}`
-    const saveData = {
-      id: md5(data),
-      name: req.body.name,
-      pwd: md5(req.body.pwd)
-    }
+    debug('这个是过来的请求数据', req.body)
     // 模型是创建文档的类，在这个例子中,一个silence就是一个文档(文档就是数据表中的一条一条的项)
-    var silence = new User(saveData)
+    var silence = new User(req.body)
     silence.save((err, doc) => {
       if (err) {
         debug('保存数据库失败', err)

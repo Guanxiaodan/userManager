@@ -10,7 +10,8 @@
     "express-session": "^1.15.6",
     "connect-mongo": "^2.0.0",
     "lodash": "^4.17.4",
-    "mongoose": "^4.12.3"
+    "mongoose": "^4.12.3",
+    "md5": "^2.2.1"
   },
   "devDependencies": {},
   "scripts": {

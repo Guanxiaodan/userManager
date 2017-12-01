@@ -1,105 +1,146 @@
 <template>
-  <div id="app">
+  <div id="app222">
+    <!--<div v-if="hashs !== '/'">-->
+      <!--<div>这是要是</div>-->
+      <!--&lt;!&ndash;<heads></heads>&ndash;&gt;-->
+    <!--</div>-->
+    <div @click="add">点我增加</div>
+    <div>{{value}}</div>
+    <div v-if="value > 5">大于5</div>
+    <div v-if="value < 5">小于5</div>
+    <div v-if="hashs === '/'">登录页</div>
+    <div v-if="hashs === '/modify'">修改页</div>
+
     <router-view/>
   </div>
 </template>
 
 <script>
-export default {
-  name: 'app'
-}
+  import heads from './components/head.vue'
+  const debug = require('debug')('app')
+
+  export default {
+    name: 'app333',
+    data () {
+      return {
+        hashs: '/',
+        value: 0
+      }
+    },
+    component: {
+      heads
+    },
+    created () {
+      debug('这是add', this.getHash)
+      window.onhashchange = function () {
+        debug('是不是不认识this', this.hashs)
+//        const h = location.hash
+//        this.getHash(h)
+      }
+    },
+    methods: {
+      add () {
+        this.value = this.value + 1
+        debug('value变了吗', this.value)
+      },
+      getHash (h) {
+        this.hashs = h.substring(0, h.length)
+      }
+    }
+  }
 </script>
 
 <style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  width: 100%;
-  height: 100%;
-}
-/*垂直布局*/
-.flex-c {
-  display: flex;
-  flex-direction: column;
-}
+  #app {
+    font-family: 'Avenir', Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+    color: #2c3e50;
+    width: 100%;
+    height: 100%;
+  }
 
-/*水平布局*/
-.flex-r {
-  display: flex;
-  flex-direction: row;
-}
+  /*垂直布局*/
+  .flex-c {
+    display: flex;
+    flex-direction: column;
+  }
 
-/*主轴方向元素居中*/
-.m-center {
-  justify-content: center;
-}
+  /*水平布局*/
+  .flex-r {
+    display: flex;
+    flex-direction: row;
+  }
 
-/*交叉方向元素居中*/
-.x-center {
-  align-items: center;
-}
+  /*主轴方向元素居中*/
+  .m-center {
+    justify-content: center;
+  }
 
-/*上下左右居中*/
-.center {
-  justify-content: center;
-  align-items: center;
-}
+  /*交叉方向元素居中*/
+  .x-center {
+    align-items: center;
+  }
 
-/*主轴方向平均分配*/
-.m-around {
-  justify-content: space-around;
-}
+  /*上下左右居中*/
+  .center {
+    justify-content: center;
+    align-items: center;
+  }
 
-/*主轴方向顶边分配*/
-.between {
-  justify-content: space-between;
-}
+  /*主轴方向平均分配*/
+  .m-around {
+    justify-content: space-around;
+  }
 
-.to-top {
-  margin-top: 1rem;
-}
+  /*主轴方向顶边分配*/
+  .between {
+    justify-content: space-between;
+  }
 
-.to-top-large {
-  margin-top: 2rem;
-}
+  .to-top {
+    margin-top: 1rem;
+  }
 
-.to-left {
-  margin-left: 1rem;
-}
+  .to-top-large {
+    margin-top: 2rem;
+  }
 
-.to-left-large {
-  margin-left: 2rem;
-}
+  .to-left {
+    margin-left: 1rem;
+  }
 
-.to-right {
-  margin-right: 1rem;
-}
+  .to-left-large {
+    margin-left: 2rem;
+  }
 
-.to-right-large {
-  margin-right: 2rem;
-}
+  .to-right {
+    margin-right: 1rem;
+  }
 
-.to-bottom {
-  margin-bottom: 1rem;
-}
+  .to-right-large {
+    margin-right: 2rem;
+  }
 
-.to-bottom-large {
-  margin-bottom: 2rem;
-}
+  .to-bottom {
+    margin-bottom: 1rem;
+  }
 
-.cover {
-  width: 100%;
-  height: 100%;
-}
+  .to-bottom-large {
+    margin-bottom: 2rem;
+  }
 
-.pointer {
-  cursor: pointer;
-}
+  .cover {
+    width: 100%;
+    height: 100%;
+  }
 
-.shadow {
-  box-shadow: 0 0 2px rgba(0, 0, 0, .3), 0 1px 8px rgba(0, 0, 0, .3);
-}
+  .pointer {
+    cursor: pointer;
+  }
+
+  .shadow {
+    box-shadow: 0 0 2px rgba(0, 0, 0, .3), 0 1px 8px rgba(0, 0, 0, .3);
+  }
 </style>

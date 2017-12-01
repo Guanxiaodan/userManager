@@ -73,34 +73,42 @@ db.once('open', () => {
    */
   app.post('/signup', (req, res) => {
     // 先判断是否有这name是否已经注册过了
-    // User.findOne({name: req.body.name}, (err, persion) => {
-    //   if (err) {
-    //     debug('数据库查询用户失败', err)
-    //     res.status(500).send('注册失败')
-    //   } else {
-    //     debug('看登录查询数据库的结果是啥', persion)
-    //     if (persion) {
-    //       res.status(200).send('该账号已注册，请重新输入账号')
-    //       return false
-    //     }
-    //   }
-    // })
-    debug('============================================================================================================================================================')
-    // 账号没有被注册过
-    const saveData = {
-      name: req.body.name,
-      pwd: md5(req.body.pwd)
-    }
-    // 模型是创建文档的类，在这个例子中,一个silence就是一个文档(文档就是数据表中的一条一条的项)
-    var silence = new User(saveData)
-    silence.save((err, doc) => {
-      if (err) {
-        debug('保存数据库失败', err)
-        res.status(500).json(req.body)
-      } else {
-        debug('保存数据库成功', doc)
-        res.status(200).send('注册成功')
+    new Promise((resolve, reject) => {
+      User.findOne({name: req.body.name}, (err, persion) => {
+        if (err) {
+          debug('注册时查询用户失败', err)
+          const err1 = '注册时查询用户出现位置错误'
+          reject(err1)
+        } else {
+          debug('看注册查询数据库的结果是啥', persion)
+          if (persion) {
+            const err2 = '该账号已注册，请重新输入账号'
+            reject(err2)
+          } else {
+            resolve('可以注册')
+          }
+        }
+      })
+    }).then((data) => {
+      debug('============================================================================================================================================================')
+      // 账号没有被注册过
+      const saveData = {
+        name: req.body.name,
+        pwd: md5(req.body.pwd)
       }
+      // 模型是创建文档的类，在这个例子中,一个silence就是一个文档(文档就是数据表中的一条一条的项)
+      var silence = new User(saveData)
+      silence.save((err, doc) => {
+        if (err) {
+          debug('保存数据库失败', err)
+          res.status(500).json(req.body)
+        } else {
+          debug('保存数据库成功', doc)
+          res.status(200).send('注册成功')
+        }
+      })
+    }).catch((err) => {
+      res.status(200).json({status: err})
     })
   })
   /**

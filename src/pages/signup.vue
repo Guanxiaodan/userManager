@@ -162,9 +162,9 @@
           debug('注册成功', res)
         }).catch((err) => {
           this.$Notice.error({
-            title: '注册失败！'
+            title: err.response.data.status
           })
-          debug('注册失败', err)
+          debug('注册失s败', err.response.data.status)
         })
       },
       // 取消注册

@@ -31,7 +31,8 @@ app.all('*', (req, res, next) => {
 /**
  * 设置服务器监听端口
  */
-app.listen(9983, () => {})
+app.listen(9983, () => {
+})
 app.use(bodyParser.json())
 
 /**
@@ -61,7 +62,6 @@ db.once('open', () => {
   debug('数据库打开成功')
   // 创建一个schema，它是用来定义数据表结构的，只有schema里定义的字段才能被保存到数据库
   var userSchema = mongoose.Schema({
-    id: String,
     name: String,
     pwd: String
   })
@@ -72,9 +72,22 @@ db.once('open', () => {
    * 注册
    */
   app.post('/signup', (req, res) => {
-    const data = `${new Date().getTime()}${req.body.name}`
+    // 先判断是否有这name是否已经注册过了
+    // User.findOne({name: req.body.name}, (err, persion) => {
+    //   if (err) {
+    //     debug('数据库查询用户失败', err)
+    //     res.status(500).send('注册失败')
+    //   } else {
+    //     debug('看登录查询数据库的结果是啥', persion)
+    //     if (persion) {
+    //       res.status(200).send('该账号已注册，请重新输入账号')
+    //       return false
+    //     }
+    //   }
+    // })
+    debug('============================================================================================================================================================')
+    // 账号没有被注册过
     const saveData = {
-      id: md5(data),
       name: req.body.name,
       pwd: md5(req.body.pwd)
     }
@@ -111,7 +124,7 @@ db.once('open', () => {
           debug('什么情况？？？')
           req.session.userInfo = {}
           req.session.userInfo.name = req.body.name
-          res.status(200).json({ status: '登录成功', name: req.body.name })
+          res.status(200).json({status: '登录成功', name: req.body.name})
         }
       }
     })

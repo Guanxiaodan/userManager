@@ -32,7 +32,7 @@
   <div class="flex-c center container-all">
     <div>
       <!--登录页面-->
-      <div v-if="isSignIn" class="container-border flex-c m-around animated flipInX">
+      <div v-if="isSignIn" class="container-border flex-c m-around animated " :class="{fadeInDown: isSignIn}">
         <div>
           <h2 class="rice-yellow">请输入用户名：</h2>
           <Input class="to-top" v-model="name" placeholder="请输入用户名..." style="width: 300px"></Input>
@@ -50,7 +50,7 @@
         </div>
       </div>
       <!--注册页面-->
-      <div v-if="!isSignIn" class="container-border flex-c m-around animated flipInYR">
+      <div v-if="!isSignIn" class="container-border flex-c m-around animated " :class="{fadeInUp: !isSignIn}">
         <div>
           <h2 class="rice-yellow">请输入用户名：</h2>
           <Input class="to-top" v-model="name" placeholder="请输入用户名..." style="width: 300px"></Input>
@@ -76,6 +76,7 @@
   const debug = require('debug')('login')
   const _ = require('lodash')
   const http = require('../api/httpApi')
+  const md5 = require('md5')
 
   export default {
     data () {
@@ -100,7 +101,7 @@
         // 登录
         http.post('/signIn', {
           name: this.name,
-          pwd: this.password
+          pwd: md5(this.password)
         })
           .then((res) => {
             debug('登陆成功', res)

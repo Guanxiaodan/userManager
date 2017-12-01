@@ -18,7 +18,7 @@ export default {
 <style scoped>
   .heads {
     width: 100%;
-    height: 100%;
+    height: 100px;
     background: pink;
   }
 </style>

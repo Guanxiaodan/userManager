@@ -1,15 +1,8 @@
 <template>
   <div id="app222">
-    <!--<div v-if="hashs !== '/'">-->
-      <!--<div>这是要是</div>-->
-      <!--&lt;!&ndash;<heads></heads>&ndash;&gt;-->
-    <!--</div>-->
-    <div @click="add">点我增加</div>
-    <div>{{value}}</div>
-    <div v-if="value > 5">大于5</div>
-    <div v-if="value < 5">小于5</div>
-    <div v-if="hashs === '/'">登录页</div>
-    <div v-if="hashs === '/modify'">修改页</div>
+    <div v-if="hashs !== '/'">
+      <heads></heads>
+    </div>
 
     <router-view/>
   </div>
@@ -23,35 +16,34 @@
     name: 'app333',
     data () {
       return {
-        hashs: '/',
-        value: 0
+        hashs: '/'
       }
     },
-    component: {
+    components: {
       heads
     },
     created () {
-      debug('这是add', this.getHash)
+      let vm = this
       window.onhashchange = function () {
-        debug('是不是不认识this', this.hashs)
-//        const h = location.hash
-//        this.getHash(h)
+        const h = location.hash
+        vm.getHash(h)
+      }
+      window.onload = function () {
+        const h = location.hash
+        vm.getHash(h)
       }
     },
     methods: {
-      add () {
-        this.value = this.value + 1
-        debug('value变了吗', this.value)
-      },
       getHash (h) {
-        this.hashs = h.substring(0, h.length)
+        this.hashs = h.substring(1, h.length)
+        debug('this.hashs', this.hashs)
       }
     }
   }
 </script>
 
 <style>
-  #app {
+  #app222 {
     font-family: 'Avenir', Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
